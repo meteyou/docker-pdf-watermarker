@@ -1,18 +1,18 @@
 const express = require('express');    //Express Web Server
 const path = require('path');     //used for file path
 const fs = require('fs-extra');       //File System - for file manipulation
-var uuid = require('node-uuid');
-var exec = require('child_process').exec;
-var Busboy = require('busboy');
+const uuid = require('node-uuid');
+const exec = require('child_process').exec;
+const Busboy = require('busboy');
 const PORT = process.env.port || 9021;
 
-var app = express();
+const app = express();
 
 app.get('/', function (req, res) {
   let home = __dirname+"/home.html";
   let stat = fs.statSync(home);
-  var readStream = fs.createReadStream(home);
-  var html = "";
+  const readStream = fs.createReadStream(home);
+  let html = "";
   readStream.on('data', function (chunk) {
         html += chunk.toString().replace("@PORT", PORT);
   });
@@ -30,12 +30,16 @@ Express v4  Route definition
 ============================================================ */
 app.route('/watermark')
     .post(function (req, res, next) {
-        var busboy = new Busboy({ headers: req.headers });
-        var fstream;
-        var watermark,pdftowatermark='';
+        const busboy = new Busboy({ headers: req.headers });
+        let fstream;
+        let watermark,pdftowatermark='';
 
-        let tempdir = '/tmp/' + uuid.v4()
-        fs.mkdir(tempdir);
+        const tempdir = '/tmp/' + uuid.v4()
+        fs.mkdirs(tempdir, err => {
+            if (err) {
+                console.error('Error creating directory:', err);
+            }
+        });
         let filesUploaded = 0;
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
@@ -47,15 +51,15 @@ app.route('/watermark')
                 filesUploaded++;
                 console.log('Uploaded File: ' + filename);
 
-                if(fieldname == "pdf-to-watermark"){
+                if(fieldname === "pdf-to-watermark"){
                   pdftowatermark = localpath;
                 }
 
-                if(fieldname == "watermark"){
+                if(fieldname === "watermark"){
                   watermark = localpath;
                 }
 
-                if(filesUploaded == 2 && (watermark === undefined || pdftowatermark === undefined)){
+                if(filesUploaded === 2 && (watermark === undefined || pdftowatermark === undefined)){
                   res.status(500);
                   res.send("Two files uploaded but the file upload fields did not have the right names, did you name the fields watermark and pdf-to-watermark?\n");
                   return;
