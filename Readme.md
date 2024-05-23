@@ -17,6 +17,16 @@ docker run -d \
     docker.io/library/docker-pdf-watermarker
 ```
 
+# Docker-compose
+```yaml
+services:
+  pdf-watermarker:
+  restart: always
+  image: docker.io/library/docker-pdf-watermarker
+  ports:
+    - "9021:9021"
+```
+
 # Connecting to the container from the host
 
 ```
