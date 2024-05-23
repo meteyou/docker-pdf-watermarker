@@ -4,17 +4,17 @@ Docker HTTP Node PDF Watermarker
 This image is service used to stamp one PDF as a watermark on each page of another and to
 return the resulting PDF using pdftk.
 
-# Deployment using copy of project on repos registry where the image is pre-built
+# Build and Deploy
 
 ```bash
-docker pull paulvisco/docker-node-pdf-watermarker
+docker build -t docker-pdf-watermarker .
 
 docker run -d \
     --name pdf-watermarker \
     --restart=always \
-    -p 127.0.0.1:9021:9021 \
+    -p 0.0.0.0:9021:9021 \
     -e "port=9021" \
-    paulvisco/docker-node-pdf-watermarker
+    docker.io/library/docker-pdf-watermarker
 ```
 
 # Connecting to the container from the host
