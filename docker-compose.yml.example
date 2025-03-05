@@ -4,5 +4,7 @@ services:
             context: .
             dockerfile: Dockerfile
         restart: unless-stopped
+        container_name: pdf-watermarker
+        image: pdf-watermarker
         ports:
           - "9021:9021"
