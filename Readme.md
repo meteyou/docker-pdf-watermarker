@@ -7,24 +7,9 @@ return the resulting PDF using pdftk.
 # Build and Deploy
 
 ```bash
-docker build -t docker-pdf-watermarker .
+cp docker-compose.yml.example docker-compose.yml
 
-docker run -d \
-    --name pdf-watermarker \
-    --restart=always \
-    -p 0.0.0.0:9021:9021 \
-    -e "port=9021" \
-    docker.io/library/docker-pdf-watermarker
-```
-
-# Docker-compose
-```yaml
-services:
-  pdf-watermarker:
-  restart: always
-  image: docker.io/library/docker-pdf-watermarker
-  ports:
-    - "9021:9021"
+docker compose up -d
 ```
 
 # Connecting to the container from the host
