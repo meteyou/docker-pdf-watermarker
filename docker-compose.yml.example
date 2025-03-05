@@ -1,0 +1,8 @@
+services:
+    pdf-watermarker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        ports:
+          - "9021:9021"
