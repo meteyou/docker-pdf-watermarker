@@ -30,7 +30,7 @@ Express v4  Route definition
 ============================================================ */
 app.route('/watermark')
     .post(function (req, res, next) {
-        const busboy = new Busboy({ headers: req.headers });
+        const busboy = Busboy({ headers: req.headers });
         let fstream;
         let watermark,pdftowatermark='';
 
@@ -41,7 +41,7 @@ app.route('/watermark')
             }
         });
         let filesUploaded = 0;
-        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+        busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
 
             let localpath = tempdir+"/"+fieldname+'.pdf';
             fstream = fs.createWriteStream(localpath);
