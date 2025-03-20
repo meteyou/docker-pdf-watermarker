@@ -1,16 +1,23 @@
 {
-  "name": "docker_node_pdftk_waterstamper",
-  "version": "1.0.0",
-  "description": "pdftk based PDF waterstamper served over nodejs",
-  "author": "Paul Visco <paul.visco@gmail.com>",
+  "name": "docker-pdf-watermarker",
+  "version": "2.0.0",
+  "description": "A Docker-based HTTP service for applying PDF watermarks using pdftk, served via Node.js",
+  "author": "Stefan Dej <meteyou@gmail.com>",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meteyou/docker-pdf-watermarker",
+    "fork": {
+      "url": "https://github.com/surebert/docker-pdf-watermarker"
+    }
+  },
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.13.3",
+    "express": "^4.21.2",
     "node-uuid": "^1.4.7",
-    "fs-extra" : "^1.0",
-    "busboy" : "^0.2.13"
+    "fs-extra": "^1.0",
+    "busboy": "^0.2.13"
   }
 }
