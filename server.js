@@ -9,16 +9,16 @@ const PORT = process.env.port || 9021;
 const app = express();
 
 app.get('/', function (req, res) {
-  let home = __dirname+"/home.html";
-  let stat = fs.statSync(home);
-  const readStream = fs.createReadStream(home);
-  let html = "";
-  readStream.on('data', function (chunk) {
+    let home = __dirname + "/home.html";
+    let stat = fs.statSync(home);
+    const readStream = fs.createReadStream(home);
+    let html = "";
+    readStream.on('data', function (chunk) {
         html += chunk.toString().replace("@PORT", PORT);
-  });
-  readStream.on('end', function(){
-    res.status(200).send(html);
-  });
+    });
+    readStream.on('end', function () {
+        res.status(200).send(html);
+    });
 
 });
 
@@ -30,9 +30,9 @@ Express v4  Route definition
 ============================================================ */
 app.route('/watermark')
     .post(function (req, res, next) {
-        const busboy = Busboy({ headers: req.headers });
+        const busboy = Busboy({headers: req.headers});
         let fstream;
-        let watermark,pdftowatermark='';
+        let watermark, pdftowatermark = '';
 
         const tempdir = '/tmp/' + uuid.v4()
         fs.mkdirs(tempdir, err => {
@@ -43,7 +43,7 @@ app.route('/watermark')
         let filesUploaded = 0;
         busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
 
-            let localpath = tempdir+"/"+fieldname+'.pdf';
+            let localpath = tempdir + "/" + fieldname + '.pdf';
             fstream = fs.createWriteStream(localpath);
             file.pipe(fstream);
 
@@ -51,53 +51,53 @@ app.route('/watermark')
                 filesUploaded++;
                 console.log('Uploaded File: ' + filename);
 
-                if(fieldname === "pdf-to-watermark"){
-                  pdftowatermark = localpath;
+                if (fieldname === "pdf-to-watermark") {
+                    pdftowatermark = localpath;
                 }
 
-                if(fieldname === "watermark"){
-                  watermark = localpath;
+                if (fieldname === "watermark") {
+                    watermark = localpath;
                 }
 
-                if(filesUploaded === 2 && (watermark === undefined || pdftowatermark === undefined)){
-                  res.status(500);
-                  res.send("Two files uploaded but the file upload fields did not have the right names, did you name the fields watermark and pdf-to-watermark?\n");
-                  return;
+                if (filesUploaded === 2 && (watermark === undefined || pdftowatermark === undefined)) {
+                    res.status(500);
+                    res.send("Two files uploaded but the file upload fields did not have the right names, did you name the fields watermark and pdf-to-watermark?\n");
+                    return;
                 }
 
-                if(watermark && pdftowatermark){
-                  let output_pdf = tempdir+'/output.pdf';
+                if (watermark && pdftowatermark) {
+                    let output_pdf = tempdir + '/output.pdf';
 
-                  let cmd = "pdftk "+pdftowatermark+" multistamp "+watermark+" output "+output_pdf;
-                  console.log('Running Command: ' + filename);
-                  res.setHeader('Cmd', cmd);
+                    let cmd = "pdftk " + pdftowatermark + " multistamp " + watermark + " output " + output_pdf;
+                    console.log('Running Command: ' + filename);
+                    res.setHeader('Cmd', cmd);
 
-                  exec(cmd, function (error, stdout, stderr) {
-                    if(error){
-                      console.error("Error Processing: "+output_pdf);
-                      res.status(500);
-                      res.send('Could not convert PDF');
-                    } else {
-
-                      let stat = fs.statSync(output_pdf);
-                      console.error("File Saved and Streaming: "+output_pdf);
-                      res.writeHead(200, {
-                          'Content-Type': 'application/pdf',
-                          'Content-Length': stat.size
-                      });
-
-                      var readStream = fs.createReadStream(output_pdf);
-                      readStream.pipe(res);
-
-                      exec('rm -rf ' + tempdir, function (err, stdout, stderr) {
-                        if(err){
-                          console.error("Could not delete "+tempdir);
+                    exec(cmd, function (error, stdout, stderr) {
+                        if (error) {
+                            console.error("Error Processing: " + output_pdf);
+                            res.status(500);
+                            res.send('Could not convert PDF');
                         } else {
-                          console.log("Deleted "+tempdir);
+
+                            let stat = fs.statSync(output_pdf);
+                            console.error("File Saved and Streaming: " + output_pdf);
+                            res.writeHead(200, {
+                                'Content-Type': 'application/pdf',
+                                'Content-Length': stat.size
+                            });
+
+                            var readStream = fs.createReadStream(output_pdf);
+                            readStream.pipe(res);
+
+                            exec('rm -rf ' + tempdir, function (err, stdout, stderr) {
+                                if (err) {
+                                    console.error("Could not delete " + tempdir);
+                                } else {
+                                    console.log("Deleted " + tempdir);
+                                }
+                            });
                         }
-                      });
-                    }
-                  });
+                    });
                 }
             });
         });
