@@ -1,10 +1,7 @@
 services:
     pdf-watermarker:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        restart: unless-stopped
         container_name: pdf-watermarker
-        image: pdf-watermarker
+        image: ghcr.io/meteyou/docker-pdf-watermarker:latest
+        restart: unless-stopped
         ports:
           - "9021:9021"
