@@ -1,40 +1,74 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <style type="text/css">
-  body{
-    background-color:orange;
-    color:brown;
-  }
-  pre {
-    background-color:#DFDFDF;
-    color:#666;
-    padding:30px;
-    marging:10px;
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Watermarker API</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #fff;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            color: #e83e8c;
+        }
+        h1 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+        }
+        p {
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-<h1>Instructions</h1>
-<p>In order to watermark a pdf, send two PDF files to /watermark, one with fieldname
-  watermark and one with fieldname pdf-to-watermark.  The watermark pdf will get
-   stamped on each page of the pdf-to-watermark pdf and the resulting PDF
-   streamed back to the client.</p>
-<h2>CURL Example</h2>
-<pre>curl -F "watermark=@watermark.pdf" -F "pdf-to-watermark=@my.pdf" http://localhost:@PORT/watermark > watermarked.pdf</pre>
-<h2>PHP Example</h2>
-<pre>
-&lt;?php
-  $ch = curl_init("http://localhost:@PORT/watermark");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, [
-      'watermark' =>  new \CurlFile(__DIR__.'/watermark.pdf','application/pdf','watermark.pdf'),
-      'pdf-to-watermark' =>  new \CurlFile(__DIR__.'/pdf-to-watermark.pdf','application/pdf','my.pdf')
-  ]);
-  $result = curl_exec($ch);
-  file_put_contents("watermarked.pdf", $result);
-</pre>
-<h1>Background Info</h1>
-<p>This system is using pdftk as the engine to support this function.</p>
+    <h1>PDF Watermarker API</h1>
+
+    <h2>Instructions</h2>
+    <p>
+        To watermark a PDF, send two PDF files to the /watermark endpoint:
+        <ul>
+            <li>One file with fieldname <code>watermark</code></li>
+            <li>One file with fieldname <code>pdf-to-watermark</code></li>
+        </ul>
+        The watermark PDF will be stamped on each page of the pdf-to-watermark file, and the resulting PDF will be streamed back to the client.
+    </p>
+
+    <h2>Endpoint</h2>
+    <pre><code>POST /watermark</code></pre>
+
+    <h2>CURL Example</h2>
+    <pre>curl -F "watermark=@watermark.pdf" \
+    -F "pdf-to-watermark=@my.pdf" \
+    http://localhost:@PORT/watermark > watermarked.pdf</pre>
+
+    <h2>PHP Example</h2>
+    <pre>&lt;?php
+$ch = curl_init("http://localhost:@PORT/watermark");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, [
+    'watermark' => new \CurlFile(__DIR__.'/watermark.pdf','application/pdf','watermark.pdf'),
+    'pdf-to-watermark' => new \CurlFile(__DIR__.'/pdf-to-watermark.pdf','application/pdf','my.pdf')
+]);
+$result = curl_exec($ch);
+file_put_contents("watermarked.pdf", $result);</pre>
+
+    <h2>Technical Details</h2>
+    <p>This system uses pdftk as the engine to support the watermarking function.</p>
 </body>
 </html>
