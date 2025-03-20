@@ -34,7 +34,7 @@ file in the test directory of this project or use the code below.
   file_put_contents("watermarked.pdf", $result);
 ```
 
-# Build and Deploy
+## Build and Deploy
 
 If you wanted to build and test this yourself
 
