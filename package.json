@@ -1,6 +1,6 @@
 {
   "name": "docker-pdf-watermarker",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A Docker-based HTTP service for applying PDF watermarks using pdftk, served via Node.js",
   "author": "Stefan Dej <meteyou@gmail.com>",
   "main": "server.js",
