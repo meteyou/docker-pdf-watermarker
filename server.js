@@ -1,7 +1,7 @@
 const express = require('express');    //Express Web Server
 const path = require('path');     //used for file path
 const fs = require('fs-extra');       //File System - for file manipulation
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const exec = require('child_process').exec;
 const Busboy = require('busboy');
 const PORT = process.env.port || 9021;
